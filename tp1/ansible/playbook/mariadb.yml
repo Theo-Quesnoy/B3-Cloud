@@ -1,0 +1,42 @@
+- name: Install MariaDB
+  hosts: db
+  become: yes
+
+  tasks:
+    - name: Installation de MariaDB
+      dnf:
+        name: 
+          - mariadb-server
+          - python3-PyMySQL
+        state: present
+
+    - name: Creation fichier .my.cnf
+      copy:
+        src: .my.cnf
+        dest: /root/.my.cnf
+        owner: root
+        mode: 0600
+      become: yes
+
+    - name: Création d'une base de données
+      mysql_db:
+        name: db_mariadb
+        state: present    
+
+    - name: Création d'un utilisateur SQL
+      mysql_user:
+        name: user1
+        password: P@ssword
+        priv: "*.*:ALL"
+        state: present
+
+    - name: Modification du fichier de configuration
+      lineinfile:
+        path: /etc/mysql/mariadb.conf.d/50-server.cnf
+        regexp: '^bind-address'
+        line: 'bind-address=10.1.1.12'
+
+    - name: Redémarrage du serveur MariaDB
+      service:
+        name: mariadb
+        state: restarted
