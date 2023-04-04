@@ -1,0 +1,9 @@
+Host node*.tp2.cloud
+  User vm
+  IdentityFile /home/theo/.ssh/id_rsa_VM
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentitiesOnly yes
+  LogLevel FATAL
+

@@ -1,0 +1,44 @@
+- name: Create webroot
+  become: true
+  file:
+    path: "{{ item.nginx_webroot }}"
+    state: directory
+  with_items:
+     - "{{ vhosts }}"
+
+- name: Create index
+  become: true
+  copy:
+    dest: "{{ item.nginx_webroot }}/index.html"
+    content: "{{ item.nginx_index_content }}"
+  with_items:
+     - "{{ vhosts }}"
+
+- name: NGINX Virtual Host
+  become: true
+  template:
+    src: vhost.conf.j2
+    dest: /etc/nginx/conf.d/{{ item.nginx_servername }}.conf
+  with_items:
+     - "{{ vhosts }}"
+
+- name: Open Port Firewall
+  become: true
+  ansible.posix.firewalld:
+    port: "{{ item.nginx_port }}/tcp"
+    state: enabled    
+  with_items:
+     - "{{ vhosts }}"
+
+- name: Restart Firewall
+  become: true
+  service: 
+    name: firewalld
+    state: restarted
+
+- name: Restart NGiNX
+  become: true
+  service:
+    name: nginx
+    state: restarted
+

@@ -1,0 +1,8 @@
+nginx_servername: test
+nginx_port: 8080
+nginx_webroot: 
+nginx_index_content: "<h1>teeeeeest</h1>"
+
+
+with_items:
+  - "{{ vhosts }}"

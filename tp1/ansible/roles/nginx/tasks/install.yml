@@ -1,0 +1,20 @@
+- name: Install nginx
+  become: true
+  ansible.builtin.package:
+    name: nginx
+    state: present
+
+- name: Start NGiNX
+  become: true
+  service:
+    name: nginx
+    state: started
+
+#- name: Open port firewalld
+#  become: true
+#  ansible.posix.firewalld:
+#    port_forward:
+#      port: '80'
+#      proto: tcp
+#      toport: '80'
+#    state: present 
